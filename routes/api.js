@@ -21,10 +21,29 @@ router.post('/chat', ChatController.procesarMensaje);
 // ==========================================
 
 /**
- * @route GET /api/admin/stats
- * @desc Obtiene todas las estadísticas aprobadas para los gráficos.
- * TODO en el futuro: Añadir middleware de autenticación (JWT) para que solo tú puedas ver esto.
+ * @route POST /api/admin/login
+ * @desc Autenticación básica para el panel de administración.
+ * @body { "password": "..." }
  */
-router.get('/admin/stats', ChatController.obtenerEstadisticasAdmin);
+router.post('/admin/login', ChatController.loginAdmin);
+
+/**
+ * @route GET /api/admin/stats
+ * @desc Obtiene todas las estadísticas de la base de datos (aprobadas, pendientes, rechazadas) para el panel.
+ */
+router.get('/admin/stats', ChatController.obtenerTodasLasEstadisticasAdmin);
+
+/**
+ * @route GET /api/admin/chat/:chatId
+ * @desc Obtiene el historial de chat crudo y completo de un alumno para revisión humana.
+ */
+router.get('/admin/chat/:chatId', ChatController.obtenerHistorialChat);
+
+/**
+ * @route PUT /api/admin/stats/:statId/estado
+ * @desc Actualiza el estado de una estadística (aprobar/rechazar) y permite añadir notas del admin.
+ * @body { "estado": "aprobado", "notasAdmin": "Revisado, todo correcto" }
+ */
+router.put('/admin/stats/:statId/estado', ChatController.actualizarEstadoStat);
 
 module.exports = router;

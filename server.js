@@ -21,10 +21,10 @@ app.use(helmet());
 // Previene inyecciones NoSQL (ej. un atacante intentando mandar {"$gt": ""} en el chat)
 app.use(mongoSanitize()); 
 
-// Configuración estricta de CORS: Solo tu frontend en Cloudflare podrá hablar con esta API
+// Configuración estricta de CORS: Ajustado para permitir las peticiones del Panel Admin (PUT)
 app.use(cors({
     origin: process.env.ALLOWED_ORIGIN || 'http://localhost:3000',
-    methods: ['GET', 'POST'], // Cybi no necesita PUT ni DELETE desde el exterior
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // CRÍTICO: PUT añadido para actualizar estados en el admin
     credentials: true
 }));
 
@@ -36,10 +36,11 @@ const limiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false,
 });
+
 // Aplicamos el límite a todo lo que vaya a /api/
 app.use('/api/', limiter); 
 
-// Evita que manden textos gigantes (ej. un millón de letras) para saturar la memoria RAM de Render
+// Evita que manden textos gigantes para saturar la memoria RAM
 app.use(express.json({ limit: '50kb' })); 
 app.use(express.urlencoded({ extended: true, limit: '50kb' }));
 
@@ -50,7 +51,7 @@ app.use(morgan('dev'));
 // 🚀 RUTAS DEL SISTEMA 🚀
 // ==========================================
 
-// Ruta de Salud (Render usa esto para saber si tu servidor está vivo)
+// Ruta de Salud
 app.get('/', (req, res) => {
     res.status(200).json({ 
         status: 'OK', 
@@ -63,7 +64,7 @@ app.get('/', (req, res) => {
 const apiRoutes = require('./routes/api');
 app.use('/api', apiRoutes);
 
-// Manejo de rutas que no existen (para evitar errores feos)
+// Manejo de rutas que no existen (para evitar errores de enrutamiento)
 app.use((req, res) => {
     res.status(404).json({ error: 'Ruta no encontrada o acceso denegado.' });
 });
@@ -75,7 +76,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`=========================================`);
     console.log(`🤖 Cybi Backend Activo`);
-    console.log(`🛡️  Modo de Seguridad: MAXIMO`);
+    console.log(`🛡️  Modo de Seguridad: MÁXIMO`);
     console.log(`📡 Escuchando en el puerto: ${PORT}`);
     console.log(`=========================================`);
 });

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Esquema para los mensajes individuales dentro de un chat
+// Esquema para los mensajes individuales dentro de la conversación
 const MessageSchema = new mongoose.Schema({
     role: {
         type: String,
@@ -10,41 +10,52 @@ const MessageSchema = new mongoose.Schema({
     content: {
         type: String,
         required: true,
-        // Evitamos que un mensaje super largo sature la base de datos
+        // Límite de seguridad para evitar saturación de la base de datos
         maxlength: [2000, 'El mensaje es demasiado largo.']
     },
     timestamp: {
         type: Date,
         default: Date.now
     }
-}, { _id: false }); // No necesitamos un ID único para cada mensajito, solo para el chat completo
+}, { _id: false }); // Optimizamos evitando crear un ObjectId para cada mensaje individual
 
-// Esquema principal del Chat
+// Esquema principal del historial de Chat
 const ChatSchema = new mongoose.Schema({
-    // Usaremos un identificador de sesión único (puede ser un token del frontend)
-    // para agrupar los mensajes de un mismo alumno sin pedirle nombre real (Ley de Protección de Datos)
     sessionId: {
         type: String,
         required: true,
-        index: true // Indexado para búsquedas súper rápidas
+        unique: true, // Garantiza integridad: una sesión = un solo documento de chat
+        index: true
     },
-    // Array que contiene toda la conversación
+    
+    // Array que contiene toda la conversación secuencial
     messages: [MessageSchema],
     
-    // Bandera de seguridad: si la IA detecta algo CRÍTICO (amenazas de muerte, ideación suicida)
+    // Bandera de seguridad de alta prioridad (Visible en el Panel Admin)
     alertaRoja: {
         type: Boolean,
-        default: false
+        default: false,
+        index: true // Indexado para filtrar rápidamente casos críticos en el dashboard
     },
     
-    // Metadatos técnicos
+    // Metadatos técnicos de origen (Oculto por defecto por privacidad)
     ipHash: {
         type: String,
-        select: false // No se devuelve en las consultas normales por privacidad
+        select: false 
     }
 }, {
     timestamps: true, // Crea automáticamente createdAt y updatedAt
     versionKey: false
 });
+
+// ==========================================
+//   OPTIMIZACIÓN DE RENDIMIENTO (ÍNDICES)      
+// ==========================================
+
+// Índice para listar el historial cronológico rápidamente en el panel de administración
+ChatSchema.index({ createdAt: -1 });
+
+// Índice compuesto para buscar alertas rojas recientes
+ChatSchema.index({ alertaRoja: 1, createdAt: -1 });
 
 module.exports = mongoose.model('Chat', ChatSchema);
