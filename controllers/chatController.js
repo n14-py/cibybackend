@@ -68,22 +68,41 @@ class ChatController {
             }
 
             const datosRecolectados = aiResponse.datos_recolectados;
-            
+            const statExistente = await Stat.findOne({ chatId: chat._id });
+            const severidad = Math.max(
+                statExistente?.severidad || 1,
+                aiResponse.analisis_interno.severidad || 1
+            );
+
+            const camposSet = {
+                chatId: chat._id,
+                ...(datosRecolectados.colegio && { colegio: datosRecolectados.colegio }),
+                ...(datosRecolectados.ciudad && { ciudad: datosRecolectados.ciudad }),
+                ...(datosRecolectados.edad && { edad: datosRecolectados.edad }),
+                ...(datosRecolectados.curso && { curso: datosRecolectados.curso }),
+                ...(datosRecolectados.esVictimaAcoso != null && { esVictimaAcoso: datosRecolectados.esVictimaAcoso }),
+                ...(datosRecolectados.derivacionRealizada === true && { derivacionRealizada: true }),
+                severidad,
+                estado: estadoRegistro,
+                motivoRevision: aiResponse.analisis_interno.motivo_broma || ''
+            };
+
+            const actualizacion = { $set: camposSet };
+            const addToSet = {};
+            if (Array.isArray(datosRecolectados.riesgosDetectados) && datosRecolectados.riesgosDetectados.length) {
+                addToSet.riesgosDetectados = { $each: datosRecolectados.riesgosDetectados };
+            }
+            if (Array.isArray(datosRecolectados.senalesEmocionales) && datosRecolectados.senalesEmocionales.length) {
+                addToSet.senalesEmocionales = { $each: datosRecolectados.senalesEmocionales };
+            }
+            if (Object.keys(addToSet).length) {
+                actualizacion.$addToSet = addToSet;
+            }
+
             await Stat.findOneAndUpdate(
-                { chatId: chat._id }, 
-                { 
-                    chatId: chat._id,
-                    ...(datosRecolectados.colegio && { colegio: datosRecolectados.colegio }),
-                    ...(datosRecolectados.ciudad && { ciudad: datosRecolectados.ciudad }),
-                    ...(datosRecolectados.edad && { edad: datosRecolectados.edad }),
-                    ...(datosRecolectados.curso && { curso: datosRecolectados.curso }),
-                    ...(datosRecolectados.riesgosDetectados && { riesgosDetectados: datosRecolectados.riesgosDetectados }),
-                    
-                    severidad: aiResponse.analisis_interno.severidad || 1,
-                    estado: estadoRegistro,
-                    motivoRevision: aiResponse.analisis_interno.motivo_broma || ''
-                },
-                { upsert: true, new: true, setDefaultsOnInsert: true } 
+                { chatId: chat._id },
+                actualizacion,
+                { upsert: true, new: true, setDefaultsOnInsert: true }
             );
 
             // 7. Le respondemos al frontend

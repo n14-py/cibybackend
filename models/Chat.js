@@ -10,8 +10,8 @@ const MessageSchema = new mongoose.Schema({
     content: {
         type: String,
         required: true,
-        // Límite de seguridad para evitar saturación de la base de datos
-        maxlength: [2000, 'El mensaje es demasiado largo.']
+        // Límite holgado: los adolescentes suelen necesitar espacio para contar detalles
+        maxlength: [4000, 'El mensaje es demasiado largo.']
     },
     timestamp: {
         type: Date,
