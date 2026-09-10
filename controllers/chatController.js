@@ -133,8 +133,8 @@ class ChatController {
             const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'cybi2026admin';
             
             if (password === ADMIN_PASSWORD) {
-                // Token básico de autorización para que el frontend pueda navegar
-                res.status(200).json({ success: true, token: 'cybi-admin-auth-token-xyz' });
+                const { ADMIN_TOKEN } = require('../middlewares/adminAuth');
+                res.status(200).json({ success: true, token: ADMIN_TOKEN });
             } else {
                 res.status(401).json({ success: false, error: 'Contraseña incorrecta' });
             }

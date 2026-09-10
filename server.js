@@ -24,7 +24,8 @@ app.use(mongoSanitize());
 // Configuración estricta de CORS: Ajustado para permitir las peticiones del Panel Admin (PUT)
 app.use(cors({
     origin: process.env.ALLOWED_ORIGIN || 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // CRÍTICO: PUT añadido para actualizar estados en el admin
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
 

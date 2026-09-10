@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-// Importamos nuestro poderoso controlador
 const ChatController = require('../controllers/chatController');
+const adminAuth = require('../middlewares/adminAuth');
 
 // ==========================================
 // 🚦 RUTAS PÚBLICAS (Frontend Cloudflare) 🚦
@@ -29,21 +29,20 @@ router.post('/admin/login', ChatController.loginAdmin);
 
 /**
  * @route GET /api/admin/stats
- * @desc Obtiene todas las estadísticas de la base de datos (aprobadas, pendientes, rechazadas) para el panel.
+ * @desc Obtiene todas las estadísticas (solo panel autenticado).
  */
-router.get('/admin/stats', ChatController.obtenerTodasLasEstadisticasAdmin);
+router.get('/admin/stats', adminAuth, ChatController.obtenerTodasLasEstadisticasAdmin);
 
 /**
  * @route GET /api/admin/chat/:chatId
- * @desc Obtiene el historial de chat crudo y completo de un alumno para revisión humana.
+ * @desc Historial de chat crudo (solo panel autenticado).
  */
-router.get('/admin/chat/:chatId', ChatController.obtenerHistorialChat);
+router.get('/admin/chat/:chatId', adminAuth, ChatController.obtenerHistorialChat);
 
 /**
  * @route PUT /api/admin/stats/:statId/estado
- * @desc Actualiza el estado de una estadística (aprobar/rechazar) y permite añadir notas del admin.
- * @body { "estado": "aprobado", "notasAdmin": "Revisado, todo correcto" }
+ * @desc Aprueba/rechaza un registro y permite notas del admin.
  */
-router.put('/admin/stats/:statId/estado', ChatController.actualizarEstadoStat);
+router.put('/admin/stats/:statId/estado', adminAuth, ChatController.actualizarEstadoStat);
 
 module.exports = router;
