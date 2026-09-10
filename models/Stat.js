@@ -38,6 +38,25 @@ const StatSchema = new mongoose.Schema({
         type: String,
         trim: true
     }],
+
+    // Señales emocionales observadas (tristeza, ansiedad, visión de túnel, etc.)
+    senalesEmocionales: [{
+        type: String,
+        trim: true
+    }],
+
+    // Si el relato indica que la persona es víctima de acoso/bullying
+    esVictimaAcoso: {
+        type: Boolean,
+        default: null
+    },
+
+    // Si Cybi ya ofreció derivación (155, 147 o centro de salud)
+    derivacionRealizada: {
+        type: Boolean,
+        default: false,
+        index: true
+    },
     
     // Nivel de severidad asignado por la IA (1 = Leve, 5 = Crítico)
     severidad: {
@@ -84,6 +103,7 @@ StatSchema.index({ estado: 1, createdAt: -1 });
 // Índices para filtros rápidos de gráficos en el frontend admin
 StatSchema.index({ ciudad: 1, estado: 1 });
 StatSchema.index({ colegio: 1, estado: 1 });
-StatSchema.index({ severidad: -1, estado: 1 });
+StatSchema.index({ esVictimaAcoso: 1, estado: 1 });
+StatSchema.index({ derivacionRealizada: 1, estado: 1 });
 
 module.exports = mongoose.model('Stat', StatSchema);

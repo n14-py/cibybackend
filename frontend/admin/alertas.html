@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybi Admin | Alertas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body" data-page="alertas">
+    <aside id="sidebar"></aside>
+    <div class="admin-wrap">
+        <header id="topbar"></header>
+        <main class="page">
+            <div id="a-status" class="status">Cargando...</div>
+            <section class="kpis">
+                <article class="kpi"><span>Críticos (5)</span><strong id="a-criticas">0</strong><b>Prioridad máxima</b></article>
+                <article class="kpi"><span>Alertas (4-5)</span><strong id="a-altas">0</strong><b>Cola de seguimiento</b></article>
+                <article class="kpi"><span>Posibles víctimas</span><strong id="a-victimas">0</strong><b>Acoso / bullying</b></article>
+                <article class="kpi"><span>Sin derivación</span><strong id="a-pendientes">0</strong><b>Revisar 155</b></article>
+            </section>
+            <section class="card">
+                <h2>Cola de seguimiento</h2>
+                <div class="table-wrap">
+                    <table class="data">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Lugar</th>
+                                <th>Severidad</th>
+                                <th>Perfil</th>
+                                <th>Derivación</th>
+                                <th>Señales</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="a-body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/alertas.js"></script>
+</body>
+</html>
