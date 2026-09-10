@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybi | Chat Educativo Seguro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/chat.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo-container">
+                    <img src="img/cybi-logo.jpeg" alt="Logo Cybi" style="border-radius: 50%;">
+                    <span class="logo-text">Cybi</span>
+                </a>
+                
+                <button class="menu-toggle" id="mobile-menu-btn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="chatbot.html" style="color: var(--primary-blue);">El Bot</a></li>
+                    <li><a href="ayuda.html">Ayuda</a></li>
+                    <li><a href="nosotros.html">Quiénes Somos</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" style="margin-top: 100px;">
+        
+        <div class="chat-preview-container glass-card">
+            
+            <div class="chat-header">
+                <div class="chat-profile">
+                    <img src="img/cybi-logo.jpeg" alt="Cybi Avatar">
+                    <div>
+                        <h2 style="font-size: 1.4rem; margin-bottom: 2px; color: var(--dark-blue);">Cybi Bot</h2>
+                        <p style="font-size: 0.85rem; margin: 0; color: var(--text-light);">Te escucho. Esto no se publica.</p>
+                    </div>
+                </div>
+                
+                <div class="system-status">
+                    <div>
+                        <span class="status-dot" id="status-dot"></span> 
+                        <strong id="status-text">Estado: Conectando...</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-window" id="chat-window">
+                
+                <div class="message-row bot">
+                    <img src="img/cybi-logo.jpeg" alt="Cybi" style="width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; border: 1px solid var(--primary-blue);">
+                    <div class="chat-bubble bot-bubble">
+                        ¡Hola! Soy Cybi. ¿Cómo estás hoy?<br><br>
+                        Podés contarme lo que quieras, con calma. Si estás triste, ansioso/a o te está pasando algo en el cole o en internet, te escucho. Esto no se publica.<br><br>
+                        Si lo necesitás, la línea <strong>155</strong> es gratis y las 24 horas. También podés ir a un centro de salud cerca de tu casa.<br><br>
+                        <strong>¿Querés contarme cómo te estás sintiendo?</strong>
+                        <div class="suggestions-container" id="suggestions">
+                            <div class="suggestion-chip" onclick="window.usarSugerencia('Hola Cybi, hoy me siento ')">
+                                <i class="fa-solid fa-heart"></i> Cómo me siento
+                            </div>
+                            <div class="suggestion-chip" onclick="window.usarSugerencia('Quiero contar algo que me está pasando ')">
+                                <i class="fa-solid fa-comment"></i> Quiero contar
+                            </div>
+                            <div class="suggestion-chip" onclick="window.usarSugerencia('Ahora no quiero hablar de lo que me pasa, pero igual quería escribirte ')">
+                                <i class="fa-solid fa-pause"></i> Ahora no quiero hablar
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="chat-input-preview">
+                <input type="text" id="chat-input" placeholder="Conectando con el servidor seguro..." disabled autocomplete="off">
+                <button id="send-btn" title="Enviar Mensaje" disabled>
+                    <i class="fa-solid fa-lock"></i>
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.getElementById('nav-links');
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = menuBtn.querySelector('i');
+            if(navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        });
+    </script>
+    
+    <script src="js/chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybi Admin | Casos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body" data-page="casos">
+    <aside id="sidebar"></aside>
+    <div class="admin-wrap">
+        <header id="topbar"></header>
+        <main class="page">
+            <div id="casos-status" class="status">Cargando...</div>
+            <section class="filters">
+                <div class="field"><label>Buscar</label><input id="f-q" placeholder="ciudad, colegio, riesgo..."></div>
+                <div class="field"><label>Ciudad</label><select id="f-ciudad"><option value="all">Todas</option></select></div>
+                <div class="field"><label>Colegio</label><select id="f-colegio"><option value="all">Todos</option></select></div>
+                <div class="field"><label>Estado</label><select id="f-estado"><option value="all">Todos</option><option value="pendiente">Pendiente</option><option value="aprobado">Aprobado</option><option value="rechazado">Rechazado</option></select></div>
+                <div class="field"><label>Severidad</label><select id="f-severidad"><option value="all">Todas</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+                <div class="field"><label>Víctima</label><select id="f-victima"><option value="all">Todas</option><option value="si">Sí</option><option value="no">No</option></select></div>
+                <div class="field"><label>Desde</label><input id="f-desde" type="date"></div>
+                <div class="field"><label>Hasta</label><input id="f-hasta" type="date"></div>
+                <button class="btn ghost" id="btn-csv" type="button"><i class="fa-solid fa-file-csv"></i> CSV</button>
+            </section>
+            <section class="card">
+                <div class="table-wrap">
+                    <table class="data">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Lugar</th>
+                                <th>Edad</th>
+                                <th>Riesgos / señales</th>
+                                <th>Sev.</th>
+                                <th>Víctima</th>
+                                <th>Estado</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="casos-body"></tbody>
+                    </table>
+                </div>
+                <div class="pager">
+                    <span id="casos-meta">0 casos</span>
+                    <div>
+                        <button class="btn ghost small" id="prev-page" type="button">Anterior</button>
+                        <button class="btn ghost small" id="next-page" type="button">Siguiente</button>
+                    </div>
+                </div>
+            </section>
+            <section class="card" id="drawer" style="display:none;">
+                <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px;">
+                    <h2>Revisión del caso</h2>
+                    <button class="btn ghost small" id="d-close" type="button">Cerrar</button>
+                </div>
+                <div id="d-meta"></div>
+                <div class="field" style="margin:12px 0;"><label>Notas internas</label><textarea id="d-notas" placeholder="Observación del equipo..."></textarea></div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+                    <button class="btn ok small" id="d-aprobar" type="button">Aprobar</button>
+                    <button class="btn warn small" id="d-pendiente" type="button">Dejar pendiente</button>
+                    <button class="btn danger small" id="d-rechazar" type="button">Descartar</button>
+                </div>
+                <div id="d-chat" class="transcript-body" style="min-height:240px;max-height:420px;background:#ece5dd;border-radius:16px;"></div>
+            </section>
+        </main>
+    </div>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/casos.js"></script>
+</body>
+</html>

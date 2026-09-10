@@ -1,0 +1,320 @@
+/* =========================================
+   CYBI - Hoja de Estilos Global (100% Responsive)
+   ========================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap');
+
+:root {
+    /* Paleta de colores basada en el logo de Cybi */
+    --primary-blue: #1877F2;
+    --dark-blue: #0B2046;
+    --light-blue: #E3F2FD;
+    --cyan-accent: #00E5FF;
+    --gold-shield: #FFD54F;
+    --text-dark: #1E293B;
+    --text-light: #64748B;
+    --white: #FFFFFF;
+    --bg-gradient: linear-gradient(135deg, #F8FBFF 0%, #E3F2FD 100%);
+    
+    /* Variables de diseño */
+    --border-radius: 24px;
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.6);
+    --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    --shadow-hover: 0 12px 40px 0 rgba(24, 119, 242, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* --- Tipografía --- */
+h1, h2, h3 {
+    font-weight: 800;
+    color: var(--dark-blue);
+    line-height: 1.2;
+}
+
+p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--text-light);
+}
+
+/* --- Utilidades --- */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Etiqueta de "En Desarrollo" */
+.dev-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(24, 119, 242, 0.1);
+    color: var(--primary-blue);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+.dev-badge i { font-size: 1.2rem; }
+
+/* --- Navegación Header --- */
+header {
+    width: 100%;
+    padding: 15px 0;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    background: rgba(248, 251, 255, 0.85);
+    border-bottom: var(--glass-border);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.logo-container img {
+    width: 45px;
+    height: auto;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+}
+
+.logo-text {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--primary-blue);
+    letter-spacing: -1px;
+}
+
+/* Enlaces del menú escritorio */
+.nav-links {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--dark-blue);
+    font-weight: 700;
+    transition: color 0.3s ease;
+    position: relative;
+    padding: 5px 0;
+}
+
+.nav-links a:hover {
+    color: var(--primary-blue);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: var(--cyan-accent);
+    transition: width 0.3s ease;
+    border-radius: 5px;
+}
+
+.nav-links a:hover::after { width: 100%; }
+
+/* Botón Hamburguesa (Oculto en PC) */
+.menu-toggle {
+    display: none;
+    font-size: 1.8rem;
+    color: var(--primary-blue);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+}
+
+/* --- Responsive Navegación Móvil --- */
+@media (max-width: 992px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 76px; /* Altura del header */
+        right: -100%; /* Oculto fuera de la pantalla */
+        flex-direction: column;
+        background: rgba(248, 251, 255, 0.98);
+        backdrop-filter: blur(15px);
+        width: 100%;
+        height: calc(100vh - 76px);
+        text-align: center;
+        transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+        padding-top: 40px;
+        gap: 35px;
+        border-top: var(--glass-border);
+    }
+
+    .nav-links.active {
+        right: 0; /* Muestra el menú */
+    }
+
+    .nav-links a {
+        font-size: 1.4rem;
+        display: block;
+        width: 100%;
+    }
+}
+
+/* --- Hero Section (Inicio) --- */
+.hero {
+    margin-top: 120px;
+    padding: 40px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 70vh;
+}
+
+.hero-content {
+    flex: 1;
+    padding-right: 40px;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+}
+
+.hero h1 span { color: var(--primary-blue); }
+.hero p { margin-bottom: 30px; }
+
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.hero-image img {
+    width: 100%;
+    max-width: 400px;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 20px 30px rgba(24, 119, 242, 0.2));
+}
+
+/* Botones */
+.btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+}
+
+.btn-primary {
+    background: var(--primary-blue);
+    color: var(--white);
+    box-shadow: 0 8px 20px rgba(24, 119, 242, 0.3);
+}
+
+.btn-primary:hover {
+    background: var(--dark-blue);
+    transform: translateY(-3px);
+}
+
+.btn-secondary {
+    background: var(--white);
+    color: var(--primary-blue);
+    border: 2px solid var(--primary-blue);
+    margin-left: 10px;
+}
+
+.btn-secondary:hover {
+    background: var(--light-blue);
+    transform: translateY(-3px);
+}
+
+/* --- Glassmorphism Cards --- */
+.glass-card {
+    background: var(--glass-bg);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    box-shadow: var(--shadow-soft);
+    border: var(--glass-border);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* --- Animaciones --- */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(24, 119, 242, 0.3); }
+    70% { box-shadow: 0 0 0 10px rgba(24, 119, 242, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(24, 119, 242, 0); }
+}
+
+/* --- Responsive General & Chatbot --- */
+@media (max-width: 992px) {
+    .hero { flex-direction: column; text-align: center; margin-top: 100px; padding: 20px 0;}
+    .hero-content { padding-right: 0; margin-bottom: 40px; }
+    .hero h1 { font-size: 2.8rem; }
+    .btn-secondary { margin-left: 0; margin-top: 15px; }
+}
+
+@media (max-width: 576px) {
+    .container { width: 92%; }
+    .hero h1 { font-size: 2.2rem; }
+    .hero p { font-size: 1rem; }
+    .hero-buttons { display: flex; flex-direction: column; gap: 10px; }
+    .btn { width: 100%; margin: 0; }
+    .glass-card { padding: 20px; }
+}
+
+/* Footer */
+footer {
+    background: var(--white);
+    padding: 20px 0;
+    text-align: center;
+    margin-top: auto;
+    border-top: var(--glass-border);
+}

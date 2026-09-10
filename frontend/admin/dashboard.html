@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybi Admin | Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="admin-body" data-page="dashboard">
+    <aside id="sidebar"></aside>
+    <div class="admin-wrap">
+        <header id="topbar"></header>
+        <main class="page">
+            <div id="dash-status" class="status">Cargando...</div>
+            <section class="kpis">
+                <article class="kpi"><span>Entrevistas</span><strong id="kpi-total">0</strong><b>Privadas</b></article>
+                <article class="kpi"><span>Válidas</span><strong id="kpi-validos">0</strong><b>Sin rechazadas</b></article>
+                <article class="kpi"><span>Incidencias</span><strong id="kpi-incidencias">0</strong><b>Con riesgo detectado</b></article>
+                <article class="kpi"><span>Alertas 4-5</span><strong id="kpi-alertas">0</strong><b>Seguimiento</b></article>
+                <article class="kpi"><span>En revisión</span><strong id="kpi-pendientes">0</strong><b>Moderación</b></article>
+                <article class="kpi"><span>Posibles víctimas</span><strong id="kpi-victimas">0</strong><b>Acoso / bullying</b></article>
+                <article class="kpi"><span>Derivaciones</span><strong id="kpi-derivaciones">0</strong><b>155 / centro de salud</b></article>
+                <article class="kpi"><span>Edad promedio</span><strong id="kpi-edad">0</strong><b>Años</b></article>
+            </section>
+            <section class="grid-2">
+                <article class="card"><h2>Tipos de riesgo</h2><div class="canvas-wrap"><canvas id="chart-riesgos"></canvas></div></article>
+                <article class="card"><h2>Zonas</h2><div class="canvas-wrap"><canvas id="chart-ciudades"></canvas></div></article>
+            </section>
+            <section class="grid-3">
+                <article class="card"><h2>Señales emocionales</h2><div class="canvas-wrap"><canvas id="chart-senales"></canvas></div></article>
+                <article class="card"><h2>Severidad</h2><div class="canvas-wrap"><canvas id="chart-severidad"></canvas></div></article>
+                <article class="card"><h2>Actividad en el tiempo</h2><div class="canvas-wrap"><canvas id="chart-tiempo"></canvas></div></article>
+            </section>
+            <section class="grid-2">
+                <article class="card"><h2>Colegios con más registros</h2><div class="canvas-wrap"><canvas id="chart-colegios"></canvas></div></article>
+                <div>
+                    <article class="card"><h2>Top ciudades</h2><div id="top-ciudades"></div></article>
+                    <article class="card"><h2>Top colegios</h2><div id="top-colegios"></div></article>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
