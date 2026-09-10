@@ -5,6 +5,9 @@ const adminAuth = require('../middlewares/adminAuth');
 const { ADMIN_TOKEN } = adminAuth;
 
 const apiSource = fs.readFileSync(path.join(__dirname, '../routes/api.js'), 'utf8');
+const serverSource = fs.readFileSync(path.join(__dirname, '../server.js'), 'utf8');
+assert.ok(serverSource.includes("app.set('trust proxy', 1)"), 'Render necesita trust proxy para el rate limit.');
+assert.ok(serverSource.includes("app.listen(PORT, '0.0.0.0'"), 'Render pide bind a 0.0.0.0.');
 
 assert.ok(apiSource.includes("router.get('/admin/stats', adminAuth"));
 assert.ok(apiSource.includes("router.get('/admin/chat/:chatId', adminAuth"));
