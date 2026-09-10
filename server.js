@@ -11,6 +11,14 @@ const connectDB = require('./config/db');
 const app = express();
 connectDB();
 
+// Render (y cualquier reverse proxy) manda X-Forwarded-For.
+// Sin esto, express-rate-limit v7 tira ERR_ERL_UNEXPECTED_X_FORWARDED_FOR.
+app.set('trust proxy', 1);
+
+if (!process.env.DEEPINFRA_API_KEY) {
+    console.error('[CONFIG] Falta DEEPINFRA_API_KEY. Cybi va a caer al Plan B en cada chat.');
+}
+
 // ==========================================
 // 🛡️ MIDDLEWARES DE SEGURIDAD EXTREMA 🛡️
 // ==========================================
@@ -70,14 +78,20 @@ app.use((req, res) => {
     res.status(404).json({ error: 'Ruta no encontrada o acceso denegado.' });
 });
 
+app.use((err, req, res, next) => {
+    console.error('[ERROR EXPRESS]:', err.message);
+    if (res.headersSent) return next(err);
+    res.status(err.status || 500).json({ error: 'Error interno del servidor.' });
+});
+
 // ==========================================
 // ⚡ INICIO DEL SERVIDOR ⚡
 // ==========================================
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`=========================================`);
     console.log(`🤖 Cybi Backend Activo`);
     console.log(`🛡️  Modo de Seguridad: MÁXIMO`);
-    console.log(`📡 Escuchando en el puerto: ${PORT}`);
+    console.log(`📡 Escuchando en 0.0.0.0:${PORT}`);
     console.log(`=========================================`);
 });

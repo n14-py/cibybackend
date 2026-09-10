@@ -188,7 +188,7 @@ class AIService {
                             'Authorization': `Bearer ${process.env.DEEPINFRA_API_KEY}`,
                             'Content-Type': 'application/json'
                         },
-                        timeout: 25000
+                        timeout: 45000
                     }
                 );
 
