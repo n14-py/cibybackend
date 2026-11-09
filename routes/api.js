@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const ChatController = require('../controllers/chatController');
+const InformeController = require('../controllers/informeController');
 const adminAuth = require('../middlewares/adminAuth');
+const { jsonInforme } = require('../middlewares/jsonBody');
 
 // ==========================================
 // 🚦 RUTAS PÚBLICAS (Frontend Cloudflare) 🚦
@@ -44,5 +46,13 @@ router.get('/admin/chat/:chatId', adminAuth, ChatController.obtenerHistorialChat
  * @desc Aprueba/rechaza un registro y permite notas del admin.
  */
 router.put('/admin/stats/:statId/estado', adminAuth, ChatController.actualizarEstadoStat);
+
+/**
+ * @route POST /api/admin/informe/resumen
+ * @desc Síntesis del PDF. El panel la pide al exportar el documento.
+ * @body { codigo, emitidoEn, fechaEmision, fechaEnLetras, zonaHoraria, filtros, indicadores, distribucion, expedientes }
+ * @returns { resumen: string, recomendaciones: string[] }
+ */
+router.post('/admin/informe/resumen', adminAuth, jsonInforme, InformeController.resumir);
 
 module.exports = router;
