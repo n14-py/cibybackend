@@ -6,6 +6,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
+const { jsonBody } = require('./middlewares/jsonBody');
 
 // 1. Inicializar Express y conectar a la BD
 const app = express();
@@ -37,20 +38,54 @@ app.use(cors({
     credentials: true
 }));
 
-// Escudo Anti-DDoS y Anti-Spam: Limita cuántos mensajes puede mandar una misma IP
-const limiter = rateLimit({
-    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 60000, // 1 minuto
-    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 20, // Máximo 20 peticiones por minuto por IP
+// El chat público sigue corto: es la puerta que usa cada alumno.
+const limiterPublico = rateLimit({
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 60000,
+    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 20,
     message: { error: 'Sistema de seguridad activado: Demasiadas peticiones. Por favor, espera un minuto.' },
     standardHeaders: true,
     legacyHeaders: false,
+    skip: (req) => req.method === 'OPTIONS',
 });
 
-// Aplicamos el límite a todo lo que vaya a /api/
-app.use('/api/', limiter); 
+// Exportar el PDF pide una conversación por expediente, además del POST del resumen.
+// El tope de 20 por minuto cortaba esas lecturas y el documento salía sin transcripciones.
+const limiterAdmin = rateLimit({
+    windowMs: 60000,
+    max: parseInt(process.env.ADMIN_RATE_LIMIT_MAX, 10) || 2000,
+    message: { error: 'Demasiadas consultas del panel. Esperá un momento y volvé a exportar.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: (req) => req.method === 'OPTIONS',
+});
 
-// Evita que manden textos gigantes para saturar la memoria RAM
-app.use(express.json({ limit: '50kb' })); 
+const limiterLogin = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    message: { error: 'Demasiados intentos de acceso. Esperá unos minutos.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: (req) => req.method === 'OPTIONS',
+});
+
+// Una exportación pide la síntesis una sola vez. Este tope evita disparar el modelo en ráfaga.
+const limiterInforme = rateLimit({
+    windowMs: 60000,
+    max: 10,
+    message: { error: 'Demasiadas síntesis seguidas. Esperá un minuto y volvé a exportar.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: (req) => req.method === 'OPTIONS',
+});
+
+app.use('/api/admin/login', limiterLogin);
+app.use('/api/admin/informe/resumen', limiterInforme);
+app.use('/api/admin', limiterAdmin);
+app.use('/api/chat', limiterPublico);
+
+// El POST del informe no se lee acá: la ruta lo acepta hasta 2mb, después de chequear el token.
+// El resto de la API sigue en 50kb.
+app.use(jsonBody);
 app.use(express.urlencoded({ extended: true, limit: '50kb' }));
 
 // Logger para ver qué está pasando en la consola de Render
@@ -81,6 +116,9 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
     console.error('[ERROR EXPRESS]:', err.message);
     if (res.headersSent) return next(err);
+    if (err.type === 'entity.too.large' || err.status === 413) {
+        return res.status(413).json({ error: 'El informe es demasiado grande para sintetizarlo de una vez.' });
+    }
     res.status(err.status || 500).json({ error: 'Error interno del servidor.' });
 });
 

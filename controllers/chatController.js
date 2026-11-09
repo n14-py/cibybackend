@@ -176,6 +176,9 @@ class ChatController {
                 createdAt: chat.createdAt
             });
         } catch (error) {
+            if (error.name === 'CastError') {
+                return res.status(404).json({ error: 'Historial de chat no encontrado.' });
+            }
             console.error('[ERROR OBTENIENDO CHAT]:', error);
             res.status(500).json({ error: 'Error al obtener el historial de chat.' });
         }
